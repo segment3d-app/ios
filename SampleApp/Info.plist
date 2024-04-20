@@ -2,6 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>app.segment3d.Segment3D</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.751456011953-0lvp69n5seq47gr77fmdvgvsqa8cp1s2</string>
+			</array>
+		</dict>
+	</array>
+	<key>StorageUrl</key>
+	<string>http://34.124.162.203:8081</string>
+	<key>GoogleClientID</key>
+	<string>751456011953-0lvp69n5seq47gr77fmdvgvsqa8cp1s2.apps.googleusercontent.com</string>
+	<key>ApiUrl</key>
+	<string>http://34.124.162.203:8080/api</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationPreferredDefaultSceneSessionRole</key>

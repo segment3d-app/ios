@@ -7,6 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D6AD3212BD20CE7007191CB /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD31F2BD20CE7007191CB /* DateFormatter.swift */; };
+		2D6AD3242BD20D01007191CB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3222BD20D01007191CB /* Config.swift */; };
+		2D6AD3432BD20D09007191CB /* ExploreFilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3252BD20D09007191CB /* ExploreFilePickerView.swift */; };
+		2D6AD3442BD20D09007191CB /* ExploreFileUploaderFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3262BD20D09007191CB /* ExploreFileUploaderFormView.swift */; };
+		2D6AD3452BD20D09007191CB /* ExploreItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3272BD20D09007191CB /* ExploreItemView.swift */; };
+		2D6AD3462BD20D09007191CB /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3282BD20D09007191CB /* ExploreView.swift */; };
+		2D6AD3482BD20D09007191CB /* ExploreFileUploaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD32B2BD20D09007191CB /* ExploreFileUploaderViewModel.swift */; };
+		2D6AD3492BD20D09007191CB /* ExploreItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD32C2BD20D09007191CB /* ExploreItemViewModel.swift */; };
+		2D6AD34A2BD20D09007191CB /* ExploreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD32D2BD20D09007191CB /* ExploreViewModel.swift */; };
+		2D6AD34B2BD20D09007191CB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3302BD20D09007191CB /* User.swift */; };
+		2D6AD34C2BD20D09007191CB /* AuthAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3322BD20D09007191CB /* AuthAction.swift */; };
+		2D6AD34D2BD20D09007191CB /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3342BD20D09007191CB /* LoginScreen.swift */; };
+		2D6AD34E2BD20D09007191CB /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3362BD20D09007191CB /* LoginViewModel.swift */; };
+		2D6AD34F2BD20D09007191CB /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3392BD20D09007191CB /* ProfileView.swift */; };
+		2D6AD3502BD20D09007191CB /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD33B2BD20D09007191CB /* ProfileViewModel.swift */; };
+		2D6AD3512BD20D09007191CB /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD33E2BD20D09007191CB /* RegisterViewModel.swift */; };
+		2D6AD3522BD20D09007191CB /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3402BD20D09007191CB /* RegisterView.swift */; };
+		2D6AD3562BD20D14007191CB /* SGInputSelectField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3532BD20D14007191CB /* SGInputSelectField.swift */; };
+		2D6AD3572BD20D14007191CB /* SGInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3542BD20D14007191CB /* SGInputTextField.swift */; };
+		2D6AD35A2BD20D54007191CB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 2D6AD3592BD20D54007191CB /* GoogleSignIn */; };
+		2D6AD35C2BD20D54007191CB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2D6AD35B2BD20D54007191CB /* GoogleSignInSwift */; };
+		2D6AD35E2BD20DC9007191CB /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD35D2BD20DC9007191CB /* MainView.swift */; };
 		610347D92B46864500693CE3 /* SampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61791DF62B41551F00302B57 /* SampleApp.swift */; };
 		610347DA2B46874500693CE3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61791DF72B41551F00302B57 /* ContentView.swift */; };
 		610347DB2B46875700693CE3 /* VisionSceneRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61791E0C2B41683500302B57 /* VisionSceneRenderer.swift */; };
@@ -27,6 +49,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D6AD31F2BD20CE7007191CB /* DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		2D6AD3222BD20D01007191CB /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2D6AD3252BD20D09007191CB /* ExploreFilePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreFilePickerView.swift; sourceTree = "<group>"; };
+		2D6AD3262BD20D09007191CB /* ExploreFileUploaderFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreFileUploaderFormView.swift; sourceTree = "<group>"; };
+		2D6AD3272BD20D09007191CB /* ExploreItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreItemView.swift; sourceTree = "<group>"; };
+		2D6AD3282BD20D09007191CB /* ExploreView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		2D6AD32B2BD20D09007191CB /* ExploreFileUploaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreFileUploaderViewModel.swift; sourceTree = "<group>"; };
+		2D6AD32C2BD20D09007191CB /* ExploreItemViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreItemViewModel.swift; sourceTree = "<group>"; };
+		2D6AD32D2BD20D09007191CB /* ExploreViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreViewModel.swift; sourceTree = "<group>"; };
+		2D6AD3302BD20D09007191CB /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2D6AD3322BD20D09007191CB /* AuthAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthAction.swift; sourceTree = "<group>"; };
+		2D6AD3342BD20D09007191CB /* LoginScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		2D6AD3362BD20D09007191CB /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		2D6AD3392BD20D09007191CB /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		2D6AD33B2BD20D09007191CB /* ProfileViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		2D6AD33E2BD20D09007191CB /* RegisterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
+		2D6AD3402BD20D09007191CB /* RegisterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		2D6AD3532BD20D14007191CB /* SGInputSelectField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGInputSelectField.swift; sourceTree = "<group>"; };
+		2D6AD3542BD20D14007191CB /* SGInputTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGInputTextField.swift; sourceTree = "<group>"; };
+		2D6AD35D2BD20DC9007191CB /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		610347D82B46861E00693CE3 /* ContentStageConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentStageConfiguration.swift; sourceTree = "<group>"; };
 		61791DC32B41514300302B57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		61791DDA2B4154FB00302B57 /* SplatRenderer+ModelRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SplatRenderer+ModelRenderer.swift"; sourceTree = "<group>"; };
@@ -49,8 +91,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D6AD35A2BD20D54007191CB /* GoogleSignIn in Frameworks */,
 				617E50CB2B314C4800F99766 /* SplatIO in Frameworks */,
 				617E50C92B314C4800F99766 /* PLYIO in Frameworks */,
+				2D6AD35C2BD20D54007191CB /* GoogleSignInSwift in Frameworks */,
 				61791E002B415D3F00302B57 /* MetalSplatter in Frameworks */,
 				61791E022B415D3F00302B57 /* SampleBoxRenderer in Frameworks */,
 			);
@@ -59,6 +103,159 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D6AD3202BD20CE7007191CB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				61791DDF2B4154FB00302B57 /* MatrixMathUtil.swift */,
+				2D6AD31F2BD20CE7007191CB /* DateFormatter.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		2D6AD3232BD20D01007191CB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3222BD20D01007191CB /* Config.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		2D6AD32A2BD20D09007191CB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3252BD20D09007191CB /* ExploreFilePickerView.swift */,
+				2D6AD3262BD20D09007191CB /* ExploreFileUploaderFormView.swift */,
+				2D6AD3272BD20D09007191CB /* ExploreItemView.swift */,
+				2D6AD3282BD20D09007191CB /* ExploreView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2D6AD32E2BD20D09007191CB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD32B2BD20D09007191CB /* ExploreFileUploaderViewModel.swift */,
+				2D6AD32C2BD20D09007191CB /* ExploreItemViewModel.swift */,
+				2D6AD32D2BD20D09007191CB /* ExploreViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2D6AD32F2BD20D09007191CB /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD32A2BD20D09007191CB /* View */,
+				2D6AD32E2BD20D09007191CB /* ViewModel */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		2D6AD3312BD20D09007191CB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3302BD20D09007191CB /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2D6AD3332BD20D09007191CB /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3322BD20D09007191CB /* AuthAction.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2D6AD3352BD20D09007191CB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3342BD20D09007191CB /* LoginScreen.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2D6AD3372BD20D09007191CB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3362BD20D09007191CB /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2D6AD3382BD20D09007191CB /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3312BD20D09007191CB /* Model */,
+				2D6AD3332BD20D09007191CB /* Service */,
+				2D6AD3352BD20D09007191CB /* View */,
+				2D6AD3372BD20D09007191CB /* ViewModel */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		2D6AD33A2BD20D09007191CB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3392BD20D09007191CB /* ProfileView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2D6AD33C2BD20D09007191CB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD33B2BD20D09007191CB /* ProfileViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2D6AD33D2BD20D09007191CB /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD33A2BD20D09007191CB /* View */,
+				2D6AD33C2BD20D09007191CB /* ViewModel */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		2D6AD33F2BD20D09007191CB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD33E2BD20D09007191CB /* RegisterViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2D6AD3412BD20D09007191CB /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD33F2BD20D09007191CB /* ViewModel */,
+				2D6AD3402BD20D09007191CB /* RegisterView.swift */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		2D6AD3422BD20D09007191CB /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD32F2BD20D09007191CB /* Explore */,
+				2D6AD3382BD20D09007191CB /* Login */,
+				2D6AD33D2BD20D09007191CB /* Profile */,
+				2D6AD3412BD20D09007191CB /* Register */,
+				2D6AD35D2BD20DC9007191CB /* MainView.swift */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		2D6AD3552BD20D14007191CB /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2D6AD3532BD20D14007191CB /* SGInputSelectField.swift */,
+				2D6AD3542BD20D14007191CB /* SGInputTextField.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		610347DF2B4689DB00693CE3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -70,7 +267,7 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		610347E02B468A0000693CE3 /* Scene */ = {
+		610347E02B468A0000693CE3 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				610347D82B46861E00693CE3 /* ContentStageConfiguration.swift */,
@@ -79,15 +276,7 @@
 				61791E142B42294700302B57 /* MetalKitSceneView.swift */,
 				61791E0C2B41683500302B57 /* VisionSceneRenderer.swift */,
 			);
-			path = Scene;
-			sourceTree = "<group>";
-		};
-		610347E12B468A0B00693CE3 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				61791DDF2B4154FB00302B57 /* MatrixMathUtil.swift */,
-			);
-			path = Util;
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		610347E22B468A1100693CE3 /* App */ = {
@@ -110,13 +299,16 @@
 			isa = PBXGroup;
 			children = (
 				610347E22B468A1100693CE3 /* App */,
-				610347E12B468A0B00693CE3 /* Util */,
-				610347E02B468A0000693CE3 /* Scene */,
+				2D6AD3232BD20D01007191CB /* Config */,
+				2D6AD3552BD20D14007191CB /* Components */,
+				2D6AD3422BD20D09007191CB /* Modules */,
+				2D6AD3202BD20CE7007191CB /* Utils */,
+				610347E02B468A0000693CE3 /* Helper */,
 				610347DF2B4689DB00693CE3 /* Model */,
-				61791DF82B41551F00302B57 /* Info.plist */,
-				61791DC32B41514300302B57 /* Assets.xcassets */,
 				61E3FD832AE5CB0200032652 /* Products */,
 				619832682AF0BC390022500D /* Frameworks */,
+				61791DF82B41551F00302B57 /* Info.plist */,
+				61791DC32B41514300302B57 /* Assets.xcassets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -149,6 +341,8 @@
 				617E50CA2B314C4800F99766 /* SplatIO */,
 				61791DFF2B415D3F00302B57 /* MetalSplatter */,
 				61791E012B415D3F00302B57 /* SampleBoxRenderer */,
+				2D6AD3592BD20D54007191CB /* GoogleSignIn */,
+				2D6AD35B2BD20D54007191CB /* GoogleSignInSwift */,
 			);
 			productName = "MetalSplatter SampleApp";
 			productReference = 617E50B02B314BE200F99766 /* MetalSplatter SampleApp.app */;
@@ -180,6 +374,7 @@
 			mainGroup = 61E3FD792AE5CB0200032652;
 			packageReferences = (
 				61791DFE2B415D3F00302B57 /* XCLocalSwiftPackageReference ".." */,
+				2D6AD3582BD20D54007191CB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 61E3FD832AE5CB0200032652 /* Products */;
 			projectDirPath = "";
@@ -205,18 +400,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D6AD3562BD20D14007191CB /* SGInputSelectField.swift in Sources */,
+				2D6AD3512BD20D09007191CB /* RegisterViewModel.swift in Sources */,
+				2D6AD3522BD20D09007191CB /* RegisterView.swift in Sources */,
+				2D6AD3492BD20D09007191CB /* ExploreItemViewModel.swift in Sources */,
+				2D6AD3502BD20D09007191CB /* ProfileViewModel.swift in Sources */,
 				61791DE22B4154FB00302B57 /* ModelIdentifier.swift in Sources */,
 				610347DA2B46874500693CE3 /* ContentView.swift in Sources */,
+				2D6AD34C2BD20D09007191CB /* AuthAction.swift in Sources */,
+				2D6AD3242BD20D01007191CB /* Config.swift in Sources */,
 				61791DE42B4154FB00302B57 /* SampleBoxRenderer+ModelRenderer.swift in Sources */,
+				2D6AD35E2BD20DC9007191CB /* MainView.swift in Sources */,
 				61791DEA2B4154FB00302B57 /* MatrixMathUtil.swift in Sources */,
+				2D6AD34E2BD20D09007191CB /* LoginViewModel.swift in Sources */,
 				610347DB2B46875700693CE3 /* VisionSceneRenderer.swift in Sources */,
 				610347D92B46864500693CE3 /* SampleApp.swift in Sources */,
 				61791E102B41688000302B57 /* MetalKitSceneRenderer.swift in Sources */,
+				2D6AD34F2BD20D09007191CB /* ProfileView.swift in Sources */,
 				61791DE02B4154FB00302B57 /* SplatRenderer+ModelRenderer.swift in Sources */,
 				61791DE82B4154FB00302B57 /* ModelRenderer.swift in Sources */,
+				2D6AD34D2BD20D09007191CB /* LoginScreen.swift in Sources */,
 				61791DCF2B41544300302B57 /* Assets.xcassets in Sources */,
+				2D6AD3452BD20D09007191CB /* ExploreItemView.swift in Sources */,
+				2D6AD3212BD20CE7007191CB /* DateFormatter.swift in Sources */,
 				61791E132B416DD700302B57 /* Constants.swift in Sources */,
+				2D6AD3482BD20D09007191CB /* ExploreFileUploaderViewModel.swift in Sources */,
 				61791E162B42297B00302B57 /* MetalKitSceneView.swift in Sources */,
+				2D6AD34A2BD20D09007191CB /* ExploreViewModel.swift in Sources */,
+				2D6AD3572BD20D14007191CB /* SGInputTextField.swift in Sources */,
+				2D6AD3442BD20D09007191CB /* ExploreFileUploaderFormView.swift in Sources */,
+				2D6AD34B2BD20D09007191CB /* User.swift in Sources */,
+				2D6AD3432BD20D09007191CB /* ExploreFilePickerView.swift in Sources */,
+				2D6AD3462BD20D09007191CB /* ExploreView.swift in Sources */,
 				610347DC2B46875A00693CE3 /* ContentStageConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,7 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = H26F4YMNBF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
@@ -246,6 +461,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.indramahaarta.metalsplatter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -254,6 +470,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
@@ -265,7 +482,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = H26F4YMNBF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
@@ -281,6 +498,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.indramahaarta.metalsplatter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -441,7 +659,28 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		2D6AD3582BD20D54007191CB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		2D6AD3592BD20D54007191CB /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2D6AD3582BD20D54007191CB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		2D6AD35B2BD20D54007191CB /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2D6AD3582BD20D54007191CB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		61791DFF2B415D3F00302B57 /* MetalSplatter */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MetalSplatter;

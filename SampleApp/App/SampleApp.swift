@@ -2,12 +2,21 @@
 import CompositorServices
 #endif
 import SwiftUI
+import GoogleSignIn
 
 @main
 struct SampleApp: App {
     var body: some Scene {
         WindowGroup("MetalSplatter Sample App", id: "main") {
-            ContentView()
+            MainView()
+                .onOpenURL { url in
+                    GIDSignIn.sharedInstance.handle(url)
+                }
+                .onAppear {
+                    GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+
+                    }
+                }
         }
 
 #if os(macOS)
