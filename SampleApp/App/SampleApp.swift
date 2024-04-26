@@ -8,15 +8,7 @@ import GoogleSignIn
 struct SampleApp: App {
     var body: some Scene {
         WindowGroup("MetalSplatter Sample App", id: "main") {
-            MainView()
-                .onOpenURL { url in
-                    GIDSignIn.sharedInstance.handle(url)
-                }
-                .onAppear {
-                    GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-
-                    }
-                }
+            ContentView()
         }
 
 #if os(macOS)

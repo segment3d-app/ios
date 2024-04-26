@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D63B0422BD3A96C0024A3A1 /* CustomMTKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D63B0412BD3A96C0024A3A1 /* CustomMTKView.swift */; };
 		2D6AD3212BD20CE7007191CB /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD31F2BD20CE7007191CB /* DateFormatter.swift */; };
 		2D6AD3242BD20D01007191CB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3222BD20D01007191CB /* Config.swift */; };
 		2D6AD3432BD20D09007191CB /* ExploreFilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD3252BD20D09007191CB /* ExploreFilePickerView.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D63B0412BD3A96C0024A3A1 /* CustomMTKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMTKView.swift; sourceTree = "<group>"; };
 		2D6AD31F2BD20CE7007191CB /* DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		2D6AD3222BD20D01007191CB /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2D6AD3252BD20D09007191CB /* ExploreFilePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreFilePickerView.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				61791E0E2B41685800302B57 /* MetalKitSceneRenderer.swift */,
 				61791E142B42294700302B57 /* MetalKitSceneView.swift */,
 				61791E0C2B41683500302B57 /* VisionSceneRenderer.swift */,
+				2D63B0412BD3A96C0024A3A1 /* CustomMTKView.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				61791DE42B4154FB00302B57 /* SampleBoxRenderer+ModelRenderer.swift in Sources */,
 				2D6AD35E2BD20DC9007191CB /* MainView.swift in Sources */,
 				61791DEA2B4154FB00302B57 /* MatrixMathUtil.swift in Sources */,
+				2D63B0422BD3A96C0024A3A1 /* CustomMTKView.swift in Sources */,
 				2D6AD34E2BD20D09007191CB /* LoginViewModel.swift in Sources */,
 				610347DB2B46875700693CE3 /* VisionSceneRenderer.swift in Sources */,
 				610347D92B46864500693CE3 /* SampleApp.swift in Sources */,

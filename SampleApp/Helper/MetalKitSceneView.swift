@@ -31,7 +31,7 @@ struct MetalKitSceneView: ViewRepresentable {
 #endif
 
     private func makeView(_ coordinator: Coordinator) -> MTKView {
-        let metalKitView = MTKView()
+        let metalKitView = CustomMTKView()
 
         if let metalDevice = MTLCreateSystemDefaultDevice() {
             metalKitView.device = metalDevice
@@ -40,6 +40,24 @@ struct MetalKitSceneView: ViewRepresentable {
         let renderer = MetalKitSceneRenderer(metalKitView)
         coordinator.renderer = renderer
         metalKitView.delegate = renderer
+        
+        metalKitView.touchesBeganHandler = { [weak renderer] touches, event in
+            renderer?.handleTouchBegan(touches: touches, with: event, in: metalKitView)
+        }
+        metalKitView.touchesMovedHandler = { [weak renderer] touches, event in
+            renderer?.handleTouchMoved(touches: touches, with: event, in: metalKitView)
+        }
+        metalKitView.touchesEndedHandler = { [weak renderer] touches, event in
+            renderer?.handleTouchEnded(touches: touches, with: event, in: metalKitView)
+        }
+        metalKitView.setupGestureRecognizers()
+        metalKitView.pinchGestureHandler = { [weak renderer] recognizer in
+            renderer?.handlePinchGesture(recognizer: recognizer, in: metalKitView)
+        }
+        metalKitView.rotationHandler = { [weak renderer] recognizer in
+            renderer?.handleRotationGesture(recognizer, in: metalKitView)
+        }
+
 
         do {
             try renderer?.load(modelIdentifier)
@@ -49,6 +67,8 @@ struct MetalKitSceneView: ViewRepresentable {
 
         return metalKitView
     }
+
+
 
 #if os(macOS)
     func updateNSView(_ view: MTKView, context: NSViewRepresentableContext<MetalKitSceneView>) {
