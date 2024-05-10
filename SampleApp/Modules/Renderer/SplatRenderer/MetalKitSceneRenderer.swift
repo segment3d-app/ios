@@ -1,5 +1,3 @@
-#if os(iOS) || os(macOS)
-
 import Metal
 import MetalKit
 import MetalSplatter
@@ -11,25 +9,25 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
     let metalKitView: MTKView
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
-
+    
     var model: ModelIdentifier?
     var modelRenderer: (any ModelRenderer)?
-
+    
     let inFlightSemaphore = DispatchSemaphore(value: Constants.maxSimultaneousRenders)
-
+    
     var lastRotationUpdateTimestamp: Date? = nil
     var rotation: Angle = .zero
-
+    
     var drawableSize: CGSize = .zero
     
     var fovy = Angle(degrees: 50)
-
+    
     var lastTouchPosition: CGPoint?
     var accumulatedXRotation = Angle.zero
     var accumulatedYRotation = Angle.zero
     var xRotation: Angle = .zero
     var yRotation: Angle = .zero
-
+    
     init?(_ metalKitView: MTKView) {
         self.device = metalKitView.device!
         guard let queue = self.device.makeCommandQueue() else { return nil }
@@ -40,11 +38,11 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
         metalKitView.sampleCount = 1
         metalKitView.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
     }
-
+    
     func load(_ model: ModelIdentifier?) throws {
         guard model != self.model else { return }
         self.model = model
-
+        
         modelRenderer = nil
         switch model {
         case .gaussianSplat(let url):
@@ -69,22 +67,22 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
             break
         }
     }
-
+    
     private var viewport: ModelRendererViewportDescriptor {
         let projectionMatrix = matrix_perspective_right_hand(fovyRadians: Float(fovy.radians),
                                                              aspectRatio: Float(drawableSize.width / drawableSize.height),
                                                              nearZ: 0.1,
                                                              farZ: 100.0)
-
+        
         let xRotationMatrix = matrix4x4_rotation(radians: Float(xRotation.radians), axis: SIMD3<Float>(0, 1, 0))
         let yRotationMatrix = matrix4x4_rotation(radians: Float(yRotation.radians), axis: SIMD3<Float>(-1, 0, 0))
         let rotationMatrix = xRotationMatrix * yRotationMatrix
         
         let translationMatrix = matrix4x4_translation(0.0, 0.0, Constants.modelCenterZ)
         let commonUpCalibration = matrix4x4_rotation(radians: .pi, axis: SIMD3<Float>(0, 0, 1))
-
+        
         let viewport = MTLViewport(originX: 0, originY: 0, width: drawableSize.width, height: drawableSize.height, znear: 0, zfar: 1)
-
+        
         return ModelRendererViewportDescriptor(viewport: viewport,
                                                projectionMatrix: projectionMatrix,
                                                viewMatrix: translationMatrix * rotationMatrix * commonUpCalibration,
@@ -104,7 +102,7 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
         lastTouchPosition = currentTouchPosition
         
         let sensitivity: CGFloat = 0.5
-       
+        
         xRotation += Angle(degrees: Double(rotationDeltaX) * sensitivity)
         yRotation -= Angle(degrees: Double(rotationDeltaY) * sensitivity)
     }
@@ -117,8 +115,8 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
         let _: CGFloat = 1.0
         if recognizer.state == .changed {
             let scale = Float(recognizer.scale)
-            fovy.degrees = max(15, min(fovy.degrees * (1 / Double(scale)), 90)) // Clamp the FOV
-            recognizer.scale = 1 // Reset the scale
+            fovy.degrees = max(15, min(fovy.degrees * (1 / Double(scale)), 90))
+            recognizer.scale = 1
         }
     }
     
@@ -126,49 +124,41 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
         if recognizer.state == .changed {
             let rotationDelta = CGFloat(recognizer.rotation)
             
-            // Determine the touch points to calculate direction vector
             let touchPoint = recognizer.location(in: view)
             guard let lastPosition = lastTouchPosition else {
                 lastTouchPosition = touchPoint
                 return
             }
-            
-            // Calculate direction vector
             let directionVector = CGPoint(x: touchPoint.x - lastPosition.x, y: touchPoint.y - lastPosition.y)
             let predominantDirection = abs(directionVector.x) > abs(directionVector.y) ? "horizontal" : "vertical"
             
             if predominantDirection == "horizontal" {
-                // Horizontal movement affects y-rotation
                 yRotation += Angle(radians: Double(rotationDelta))
             } else {
-                // Vertical movement affects x-rotation
                 xRotation += Angle(radians: Double(rotationDelta))
             }
-
-            // Reset recognizer rotation
+            
             recognizer.rotation = 0
-
-            // Update last touch position
             lastTouchPosition = touchPoint
         }
     }
-
+    
     func draw(in view: MTKView) {
         guard let modelRenderer else { return }
         guard let drawable = view.currentDrawable else { return }
-
+        
         _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
-
+        
         guard let commandBuffer = commandQueue.makeCommandBuffer() else {
             inFlightSemaphore.signal()
             return
         }
-
+        
         let semaphore = inFlightSemaphore
         commandBuffer.addCompletedHandler { (_ commandBuffer)-> Swift.Void in
             semaphore.signal()
         }
-
+        
         modelRenderer.render(viewports: [viewport],
                              colorTexture: view.multisampleColorTexture ?? drawable.texture,
                              colorStoreAction: view.multisampleColorTexture == nil ? .store : .multisampleResolve,
@@ -177,15 +167,13 @@ class MetalKitSceneRenderer: NSObject, MTKViewDelegate {
                              rasterizationRateMap: nil,
                              renderTargetArrayLength: 0,
                              to: commandBuffer)
-
+        
         commandBuffer.present(drawable)
-
+        
         commandBuffer.commit()
     }
-
+    
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         drawableSize = size
     }
 }
-
-#endif // os(iOS) || os(macOS)

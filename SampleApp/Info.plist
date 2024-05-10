@@ -21,11 +21,11 @@
 		</dict>
 	</array>
 	<key>StorageUrl</key>
-	<string>http://34.124.162.203:8081</string>
+	<string>http://34.142.178.123:8081</string>
 	<key>GoogleClientID</key>
 	<string>751456011953-0lvp69n5seq47gr77fmdvgvsqa8cp1s2.apps.googleusercontent.com</string>
 	<key>ApiUrl</key>
-	<string>http://34.124.162.203:8080/api</string>
+	<string>http://34.142.178.123:8080/api</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationPreferredDefaultSceneSessionRole</key>
@@ -35,5 +35,15 @@
 		<key>UISceneConfigurations</key>
 		<dict/>
 	</dict>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+		<string>arkit</string>
+		<string>metal</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used for augmenting reality.</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 </dict>
 </plist>

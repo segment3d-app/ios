@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct ExploreItemView: View {
     @ObservedObject var viewModel: ExploreItemViewModel
@@ -19,6 +20,32 @@ struct ExploreItemView: View {
         self.openWindow = openWindow
     }
     
+    func downloadFile(from url: URL, to destination: URL, completion: @escaping (Error?) -> Void) {
+        let fileManager = FileManager.default
+        
+        if fileManager.fileExists(atPath: destination.path) {
+            do {
+                try fileManager.removeItem(at: destination)
+            } catch {
+                completion(error)
+                return
+            }
+        }
+        
+        let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
+            if let localURL = localURL {
+                do {
+                    try FileManager.default.moveItem(at: localURL, to: destination)
+                    completion(nil)
+                } catch {
+                    completion(error)
+                }
+            } else {
+                completion(error)
+            }
+        }
+        task.resume()
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -70,7 +97,22 @@ struct ExploreItemView: View {
                 .gesture(
                     TapGesture(count:1)
                         .onEnded({
-                            openWindow(ModelIdentifier.sampleBox)
+                            let remoteURL = URL(string: "https://storage.googleapis.com/segment3d-app/test.ply")!
+
+                            guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                                fatalError("Unable to access documents directory")
+                            }
+
+                            let localFilePath = documentsDirectory.appendingPathComponent("test.ply")
+                            
+                            downloadFile(from: remoteURL, to: localFilePath) { error in
+                                if let error = error {
+                                    print("Error downloading file: \(error)")
+                                } else {
+                                    print("File downloaded successfully")
+                                    openWindow(ModelIdentifier.gaussianSplat(localFilePath))
+                                }
+                            }
                         })) //.gesture
                 .highPriorityGesture(TapGesture(count:2)
                     .onEnded({
