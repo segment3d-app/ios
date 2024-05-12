@@ -15,11 +15,9 @@ struct AssetListResponse: Codable {
 
 struct Asset: Codable, Identifiable {
     let id: String
-    let assetType, assetUrl, createdAt, gaussianUrl: String
-    var isLikedByMe, isPrivate: Bool
+    let title, slug, type, thumbnailUrl, photoDirUrl, splatUrl, pclUrl, pclColmapUrl, segmentedPclDirUrl, segmentedSplatDirUrl, status, createdAt, updatedAt: String
+    var isPrivate, isLikedByMe: Bool
     var likes: Int
-    let pointCloudUrl, slug, status, thumbnailUrl: String
-    let title, updatedAt: String
     let user: User
 }
 
@@ -44,15 +42,14 @@ class ExploreViewModel: ObservableObject {
     @Published var isMyAssetOnly: Bool
     @Published var searchTerm: String = ""
     @Published var images: [UIImage] = []
-    @Published var videoURL: URL?
     @Published var mediaItems: [MediaItem] = []
     @Published var alertMessage: String?
-
+    
     init(isMyAssetOnly: Bool) {
         self.isMyAssetOnly = isMyAssetOnly
         fetchAssets()
     }
-
+    
     func fetchAssets(withLoading: Bool = true) {
         if withLoading {
             isLoading = true
@@ -95,6 +92,7 @@ class ExploreViewModel: ObservableObject {
                     self?.assets = decodedResponse.assets
                     self?.message = decodedResponse.message
                 } else {
+                    print(data, response)
                     print("Failed to decode JSON")
                 }
             }
@@ -103,7 +101,6 @@ class ExploreViewModel: ObservableObject {
     
     func onMediaPick(pickedMedia : [MediaItem]) -> ActiveSheet? {
         images = []
-        videoURL = nil
         
         let imageCollection = pickedMedia.compactMap { item -> UIImage? in
             if case .image(let image) = item {
@@ -112,28 +109,13 @@ class ExploreViewModel: ObservableObject {
             return nil
         }
         
-        let videoCollection = pickedMedia.compactMap { item -> URL? in
-            if case .video(let url) = item {
-                return url
-            }
+        guard imageCollection.count >= 5 else {
+            alertMessage = "You must select at least five images."
             return nil
         }
         
-        guard (imageCollection.isEmpty && videoCollection.count > 0) || (imageCollection.count > 0 && videoCollection.isEmpty) else {
-            alertMessage = "You must select either images or a video, not both."
-            return nil
-            }
-            
-        guard imageCollection.count >= 1 || videoCollection.count == 1 else {
-            alertMessage = "You must select at least one image or one video."
-            return nil
-        }
+        images = imageCollection
         
-        if(imageCollection.count > 0) {
-            images = imageCollection
-        } else {
-            videoURL = videoCollection[0]
-        }
         return .uploadForm
     }
     

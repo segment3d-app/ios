@@ -8,14 +8,31 @@
 import SwiftUI
 
 enum ActiveSheet: Identifiable {
-    case picker, uploadForm
+    case chooseModel, picker, scanner, uploadForm
     
     var id: Int {
         switch self {
-        case .picker:
+        case .chooseModel:
             return 0
-        case .uploadForm:
+        case .picker:
             return 1
+        case .scanner:
+            return 2
+        case .uploadForm:
+            return 3
+        }
+    }
+}
+
+enum UploadType: Identifiable {
+    case lidar, non_lidar
+    
+    var id: String {
+        switch self {
+        case .lidar:
+            return "lidar"
+        case .non_lidar:
+            return "non_lidar"
         }
     }
 }
@@ -23,7 +40,10 @@ enum ActiveSheet: Identifiable {
 struct ExploreView: View {
     @ObservedObject var viewModel: ExploreViewModel
     @State private var activeSheet: ActiveSheet?
+    @State private var pathFile: String?
+    @State private var uploadType: UploadType?
     @State private var navigationPath = NavigationPath()
+    @State var detentHeight: CGFloat = 0
     
     init(viewModel: ExploreViewModel) {
         self.viewModel = viewModel
@@ -78,7 +98,7 @@ struct ExploreView: View {
                         HStack {
                             Spacer()
                             Button(action: {
-                                activeSheet = .picker
+                                activeSheet = .chooseModel
                             }) {
                                 Image(systemName: "plus.circle.fill")
                                     .resizable()
@@ -97,6 +117,29 @@ struct ExploreView: View {
                 }
                 .sheet(item: $activeSheet) { item in
                     switch item {
+                    case .chooseModel:
+                        VStack(alignment: .center, spacing: 20, content: {
+                            Text("Choose Model")
+                                .font(.title2)
+                                .padding(.top, 20)
+                            Button(action: {
+                                activeSheet = .picker
+                            }, label: {
+                                Text("3D Gaussian Splatting")
+                            })
+                            Button(action: {
+                                activeSheet = .scanner
+                            }, label: {
+                                Text("3D Point Cloud")
+                            })
+                        })
+                        .readHeight()
+                        .onPreferenceChange(HeightPreferenceKey.self) { height in
+                            if let height {
+                                self.detentHeight = height
+                            }
+                        }
+                        .presentationDetents([.height(self.detentHeight)])
                     case .picker:
                         ExploreFilePickerView(
                             pickerResult: $viewModel.mediaItems,
@@ -104,17 +147,35 @@ struct ExploreView: View {
                                 get: { self.activeSheet == .picker },
                                 set: { _ in }
                             ),
-                            selectionLimit: 20,
+                            selectionLimit: 50,
                             onDone: { pickedMedia in
                                 activeSheet = viewModel.onMediaPick(pickedMedia: pickedMedia)
                             }
                         )
-                        
-                    case .uploadForm:
-                        ExploreFileUploaderFormView(videoURL: viewModel.videoURL, images: viewModel.images, onDone: {
-                            viewModel.fetchAssets()
-                            activeSheet = nil
+                    case .scanner:
+                        ScannerWrapper(onDone: { path in
+                            DispatchQueue.main.async {
+                                viewModel.images = getImages(forDirectory: "\(path)/data")
+                                activeSheet = .uploadForm
+                                pathFile = path
+                                uploadType = .lidar
+                            }
                         })
+                            .edgesIgnoringSafeArea(.all)
+                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                    case .uploadForm:
+                        if uploadType == .lidar {
+                            let pclUrl: URL = getPointCloud(forDirectory: pathFile!)!
+                            ExploreFileUploaderFormView(images: viewModel.images, pclUrl: pclUrl) {
+                                viewModel.fetchAssets()
+                                activeSheet = nil
+                            }
+                        } else {
+                            ExploreFileUploaderFormView(images: viewModel.images) {
+                                viewModel.fetchAssets()
+                                activeSheet = nil
+                            }
+                        }
                     }
                 }
             } else {
@@ -134,6 +195,34 @@ struct ExploreView: View {
         .refreshable {
             viewModel.fetchAssets(withLoading: false)
         }
+    }
+}
+
+struct HeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat?
+
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
+        guard let nextValue = nextValue() else { return }
+        value = nextValue
+    }
+}
+
+private struct ReadHeightModifier: ViewModifier {
+    private var sizeView: some View {
+        GeometryReader { geometry in
+            Color.clear.preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+        }
+    }
+
+    func body(content: Content) -> some View {
+        content.background(sizeView)
+    }
+}
+
+extension View {
+    func readHeight() -> some View {
+        self
+            .modifier(ReadHeightModifier())
     }
 }
 

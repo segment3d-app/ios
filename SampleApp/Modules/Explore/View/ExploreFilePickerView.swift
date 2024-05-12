@@ -10,7 +10,6 @@ import PhotosUI
 
 enum MediaItem {
     case image(UIImage)
-    case video(URL)
 }
 
 struct ExploreFilePickerView: UIViewControllerRepresentable {
@@ -21,7 +20,7 @@ struct ExploreFilePickerView: UIViewControllerRepresentable {
         
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
-        config.filter = .any(of: [.images, .videos])
+        config.filter = .any(of: [.images])
         config.selectionLimit = selectionLimit
 
         let picker = PHPickerViewController(configuration: config)
@@ -58,13 +57,6 @@ struct ExploreFilePickerView: UIViewControllerRepresentable {
                             defer { group.leave() }
                             if let image = image as? UIImage {
                                 mediaItems.append(.image(image))
-                            }
-                        }
-                    } else if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-                        provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { (url, error) in
-                            defer { group.leave() }
-                            if let url = url {
-                                mediaItems.append(.video(url))
                             }
                         }
                     }

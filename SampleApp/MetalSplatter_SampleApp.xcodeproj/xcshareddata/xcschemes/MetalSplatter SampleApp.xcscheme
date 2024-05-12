@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "617E50AF2B314BE200F99766"
-               BuildableName = "MetalSplatter SampleApp.app"
+               BuildableName = "Segment3d App.app"
                BlueprintName = "MetalSplatter SampleApp"
                ReferencedContainer = "container:MetalSplatter_SampleApp.xcodeproj">
             </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "617E50AF2B314BE200F99766"
-            BuildableName = "MetalSplatter SampleApp.app"
+            BuildableName = "Segment3d App.app"
             BlueprintName = "MetalSplatter SampleApp"
             ReferencedContainer = "container:MetalSplatter_SampleApp.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "617E50AF2B314BE200F99766"
-            BuildableName = "MetalSplatter SampleApp.app"
+            BuildableName = "Segment3d App.app"
             BlueprintName = "MetalSplatter SampleApp"
             ReferencedContainer = "container:MetalSplatter_SampleApp.xcodeproj">
          </BuildableReference>

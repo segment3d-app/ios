@@ -119,7 +119,7 @@ class ExploreFileUploaderViewModel: ObservableObject {
         return fileURLs
     }
 
-    func uploadFiles(folder: String, files: [URL], completion: @escaping () -> Void) {
+    func uploadFiles(folder: String, files: [URL], type: UploadType, completion: @escaping (String) -> Void) {
         isLoading = true
         let boundary = "Boundary-\(UUID().uuidString)"
         var request = URLRequest(url: URL(string: "\(Config.storageUrl)/upload")!)
@@ -147,7 +147,7 @@ class ExploreFileUploaderViewModel: ObservableObject {
         request.httpBody = data
 
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [self] in
                 if let error = error {
                     print("Error upload file: \(error.localizedDescription)")
                     self?.uploadError = "Error upload file: \(error.localizedDescription)"
@@ -171,29 +171,33 @@ class ExploreFileUploaderViewModel: ObservableObject {
                         self?.uploadError = "Url response is empty"
                         return
                     }
-                    var fileType = "video"
-                    if decodedResponse.url.count > 0 {
-                        fileType = "images"
+                    
+                    if type == .lidar, let firstURL = decodedResponse.url.first, firstURL.contains(".ply") {
+                        completion(firstURL)
+                    } else {
+                        let url = self?.processAssetUrl(decodedResponse.url)
+                        completion(url!)
                     }
-                    let url = self?.processAssetUrl(decodedResponse.url, fileType: fileType)
-                    self?.uploadedUrl = url
-                    self?.postAssetDetails(assetType: fileType, completion: completion)
                 } else {
                     self?.uploadError = "Failed to decode JSON"
-                    print("Failed to decode JSON")
+                    completion("Failed to decode JSON")
                 }
             }
         }.resume()
     }
     
-    private func postAssetDetails(assetType: String, completion: @escaping () -> Void) {
-        let payload: [String: Any] = [
-            "assetType": assetType,
-            "assetUrl": uploadedUrl!,
+    func postAssetDetails(assetType: String, photoDirUrl: String, pclUrl: String?, completion: @escaping () -> Void) {
+        var payload: [String: Any] = [
+            "type": assetType,
+            "photoDirUrl": photoDirUrl,
             "isPrivate": privacy == "Private" ? true : false,
             "title": title,
             "tags": tags
         ]
+        
+        if assetType == "lidar" {
+            payload["pclUrl"] = pclUrl
+        }
 
         guard let url = URL(string: "\(Config.apiUrl)/assets") else {
             print("Invalid URL")
@@ -239,14 +243,15 @@ class ExploreFileUploaderViewModel: ObservableObject {
         }.resume()
     }
 
-    private func processAssetUrl(_ url: [String], fileType: String) -> String {
-        var assetUrl = url.count >= 1 ? url[0] : ""
-        if fileType == "images" {
-           var urlComponents = assetUrl.components(separatedBy: "/")
-           urlComponents.removeLast()
-           assetUrl = urlComponents.joined(separator: "/")
+    private func processAssetUrl(_ urls: [String]) -> String? {
+        guard let firstUrl = urls.first else {
+            return ""
         }
-        return assetUrl
+        guard let lastIndex = firstUrl.lastIndex(of: "/") else {
+            return nil
+        }
+        let directoryPath = String(firstUrl[..<lastIndex])
+        return directoryPath
     }
 }
 

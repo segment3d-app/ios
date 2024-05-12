@@ -29,7 +29,7 @@ final class Renderer {
     // Particle's size in pixels
     private let particleSize: Float = 10
     // We only use landscape orientation in this app
-    private let orientation = UIInterfaceOrientation.landscapeRight
+    private let orientation = UIInterfaceOrientation.portrait
     // Camera's threshold values for detecting when the camera moves so that we can accumulate the points
     private let cameraRotationThreshold = cos(2 * .degreesToRadian)
     private let cameraTranslationThreshold: Float = pow(0.02, 2)   // (meter-squared)
@@ -107,7 +107,7 @@ final class Renderer {
         }
     }
     
-    var rgbRadius: Float = 0 {
+    var rgbRadius: Float = 2 {
         didSet {
             // apply the change for the shader
             rgbUniforms.radius = rgbRadius
@@ -297,14 +297,16 @@ final class Renderer {
                     cameraIntrinsicsInversed: frame.cameraIntrinsicsInversed
                 )
                 
+                let rotatedImage = rotateImage(cvPixelBuffer: frame.capturedImage, orientation: .up)
+                
                 let jsonEncoder = JSONEncoder()
                 jsonEncoder.outputFormatting = .prettyPrinted
                 
                 let encoded = try jsonEncoder.encode(dataPack)
                 let encodedStr = String(data: encoded, encoding: .utf8)!
-                try await saveFile(content: encodedStr, filename: "\(frame.timestamp)_\(pickFrames).json", folder: currentFolder + "/data")
-                try await savePic(pic: cvPixelBuffer2UIImage(pixelBuffer: frame.capturedImage), filename: "\(frame.timestamp)_\(pickFrames).jpeg", folder: currentFolder + "/data")
+                try await savePic(pic: cvPixelBuffer2UIImage(pixelBuffer: rotatedImage!), filename: "\(frame.timestamp)_\(pickFrames).jpeg", folder: currentFolder + "/data")
                 delegate?.didFinishTask()
+                //                try await saveFile(content: encodedStr, filename: "\(frame.timestamp)_\(pickFrames).json", folder: currentFolder + "/data")
             } catch {
                 print(error.localizedDescription)
             }
@@ -312,7 +314,7 @@ final class Renderer {
     }
     
     /// Save all particles to a point cloud file in ply format.
-    func savePointCloud() {
+    func savePointCloud(completion: @escaping (Result<String, Error>) -> Void) {
         delegate?.didStartTask()
         Task.init(priority: .utility) {
             do {
@@ -336,16 +338,18 @@ final class Renderer {
                     fileToWrite += "\r\n"
                 }
                 
-                print(fileToWrite)
-                
-                try await saveFile(content: fileToWrite, filename: "\(getTimeStr()).ply", folder: currentFolder)
+                // Save the file
+                let filename = "\(getTimeStr()).ply"
+                try await saveFile(content: fileToWrite, filename: filename, folder: currentFolder)
                 
                 delegate?.didFinishTask()
+                completion(.success("\(currentFolder)"))
             } catch {
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
+
     
     private func shouldAccumulate(frame: ARFrame) -> Bool {
         if (!isRecording) {
@@ -386,9 +390,99 @@ final class Renderer {
         currentPointCount = min(currentPointCount + gridPointsBuffer.count, maxPoints)
         lastCameraTransform = frame.camera.transform
     }
+    
+    private func rotateImage(cvPixelBuffer: CVPixelBuffer, orientation: UIImage.Orientation) -> CVPixelBuffer? {
+        guard let image = UIImage(cvPixelBuffer: cvPixelBuffer, orientation: orientation) else {
+            print("Failed to create UIImage from CVPixelBuffer.")
+            return nil
+        }
+        
+        // Rotate the image
+        let rotatedImage = image.rotated(by: .pi/2) // Rotate by 90 degrees
+        
+        // Convert the rotated UIImage back to CVPixelBuffer
+        guard let rotatedPixelBuffer = rotatedImage.pixelBuffer() else {
+            print("Failed to convert UIImage to CVPixelBuffer.")
+            return nil
+        }
+        
+        return rotatedPixelBuffer
+    }
 }
 
 // MARK: - Metal Helpers
+extension UIImage {
+    // Create UIImage from CVPixelBuffer
+    convenience init?(cvPixelBuffer: CVPixelBuffer, orientation: UIImage.Orientation) {
+        let ciImage = CIImage(cvPixelBuffer: cvPixelBuffer)
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            return nil
+        }
+        self.init(cgImage: cgImage, scale: UIScreen.main.scale, orientation: orientation)
+    }
+    
+    // Convert UIImage to CVPixelBuffer
+    func pixelBuffer() -> CVPixelBuffer? {
+        let width = Int(size.width)
+        let height = Int(size.height)
+        
+        var pixelBuffer: CVPixelBuffer?
+        let options: [String: Any] = [
+            kCVPixelBufferCGImageCompatibilityKey as String: true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey as String: true
+        ]
+        
+        let status = CVPixelBufferCreate(kCFAllocatorDefault,
+                                          width,
+                                          height,
+                                          kCVPixelFormatType_32ARGB,
+                                          options as CFDictionary,
+                                          &pixelBuffer)
+        
+        guard status == kCVReturnSuccess, let buffer = pixelBuffer else {
+            return nil
+        }
+        
+        CVPixelBufferLockBaseAddress(buffer, [])
+        let pixelData = CVPixelBufferGetBaseAddress(buffer)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipFirst.rawValue)
+        
+        if let context = CGContext(data: pixelData,
+                                   width: width,
+                                   height: height,
+                                   bitsPerComponent: 8,
+                                   bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
+                                   space: colorSpace,
+                                   bitmapInfo: bitmapInfo.rawValue) {
+            context.draw(cgImage!, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            CVPixelBufferUnlockBaseAddress(buffer, [])
+            return buffer
+        } else {
+            CVPixelBufferUnlockBaseAddress(buffer, [])
+            return nil
+        }
+    }
+    
+    // Rotate UIImage by angle
+    func rotated(by angle: CGFloat) -> UIImage {
+        let rotatedSize = CGRect(origin: .zero, size: size)
+            .applying(CGAffineTransform(rotationAngle: angle))
+            .integral.size
+        UIGraphicsBeginImageContext(rotatedSize)
+        if let context = UIGraphicsGetCurrentContext() {
+            context.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
+            context.rotate(by: angle)
+            draw(in: CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height))
+            let rotatedImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return rotatedImage ?? self
+        }
+        return self
+    }
+}
 
 private extension Renderer {
     func makeUnprojectionPipelineState() -> MTLRenderPipelineState? {

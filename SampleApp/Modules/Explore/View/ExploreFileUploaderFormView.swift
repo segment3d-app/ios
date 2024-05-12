@@ -10,8 +10,8 @@ import AVKit
 
 struct ExploreFileUploaderFormView: View {
     @StateObject var viewModel: ExploreFileUploaderViewModel = ExploreFileUploaderViewModel()
-    var videoURL: URL?
     var images: [UIImage]
+    var pclUrl: URL?
     var onDone: () -> Void
 
     
@@ -20,23 +20,15 @@ struct ExploreFileUploaderFormView: View {
             Text("Upload Asset")
                 .font(.title2)
                 .fontWeight(.bold)
+                .padding(.top, 20)
             Group {
-                if let videoURL = videoURL {
-                    VideoPlayer(player: AVPlayer(url: videoURL))
-                        .frame(height: 300)
-                        .onAppear {
-                            print("Video URL: \(videoURL)")
-                            verifyVideoURL(videoURL)
-                        }
-                } else {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(images, id: \.self) { image in
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 300)
-                            }
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(images, id: \.self) { image in
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 300)
                         }
                     }
                 }
@@ -106,14 +98,22 @@ struct ExploreFileUploaderFormView: View {
             Spacer()
             
             Button(action: {
-                let folderName = "assets/\(viewModel.title)/source"
-                if let videoURL = videoURL {
-                    viewModel.uploadFiles(folder: folderName, files: [videoURL]) {
-                        onDone()
-                    }
-                } else if !images.isEmpty {
-                    viewModel.uploadFiles(folder: folderName, files: viewModel.convertImagesToURL(images: images)) {
-                        onDone()
+                let photoFolderName = "\(viewModel.title)/photos"
+                let pclFolderName = "\(viewModel.title)/pcl"
+                let uploadType: UploadType = (pclUrl != nil) ? .lidar : .non_lidar
+                if !images.isEmpty {
+                    viewModel.uploadFiles(folder: photoFolderName, files: viewModel.convertImagesToURL(images: images), type: uploadType) { photoDirUrl in
+                        if uploadType == .lidar, let pclUrl = pclUrl {
+                            viewModel.uploadFiles(folder: pclFolderName, files: [pclUrl], type: .lidar) { pclUrl in
+                                viewModel.postAssetDetails(assetType: "lidar", photoDirUrl: photoDirUrl, pclUrl: pclUrl) {
+                                    onDone()
+                                }
+                            }
+                        } else {
+                            viewModel.postAssetDetails(assetType: "non_lidar", photoDirUrl: photoDirUrl, pclUrl: nil) {
+                                onDone()
+                            }
+                        }
                     }
                 }
             }) {

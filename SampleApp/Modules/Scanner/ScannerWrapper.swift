@@ -2,14 +2,19 @@ import SwiftUI
 import UIKit
 
 struct ScannerWrapper: UIViewControllerRepresentable {
-    typealias UIViewControllerType = ViewController // Replace MyUIKitViewController with the name of your UIKit View Controller class
+    typealias UIViewControllerType = ViewController
+    
+    let onDone: (_ path: String) -> Void
+    
+    init(onDone: @escaping (_ path: String) -> Void) {
+        self.onDone = onDone
+    }
 
     func makeUIViewController(context: Context) -> ViewController {
-        // Instantiate and return your UIKit View Controller
-        return ViewController()
+        let viewController = ViewController(onDone: onDone)
+        return viewController
     }
 
     func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-        // Update the UIKit View Controller if needed
     }
 }

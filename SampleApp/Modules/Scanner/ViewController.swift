@@ -26,6 +26,17 @@ final class ViewController: UIViewController, ARSessionDelegate {
     private let session = ARSession()
     private var renderer: Renderer!
     
+    var onDone: (_ path: String) -> Void
+    
+    init(onDone: @escaping (_ path: String) -> Void) {
+        self.onDone = onDone
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,29 +47,14 @@ final class ViewController: UIViewController, ARSessionDelegate {
         
         session.delegate = self
         
-        // Set the view to use the default device
-//        if let view = view as? MTKView {
-//            view.device = device
-//            
-//            view.backgroundColor = UIColor.clear
-//            // we need this to enable depth test
-//            view.depthStencilPixelFormat = .depth32Float
-//            view.contentScaleFactor = 1
-//            view.delegate = self
-//            
-//            // Configure the renderer to draw to the view
-//            renderer = Renderer(session: session, metalDevice: device, renderDestination: view)
-//            renderer.drawRectResized(size: view.bounds.size)
-//            renderer.delegate = self
-//        }
-        
-        let metalView = MTKView(frame: .zero, device: device)
+        let metalView = MTKView(frame: view.bounds, device: device)
         metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.backgroundColor = UIColor.clear
         metalView.depthStencilPixelFormat = .depth32Float
         metalView.contentScaleFactor = 1
         metalView.delegate = self
         view.addSubview(metalView)
+        view.backgroundColor = UIColor.clear
         
         renderer = Renderer(session: session, metalDevice: device, renderDestination: metalView)
         renderer.drawRectResized(size: metalView.bounds.size)
@@ -71,7 +67,7 @@ final class ViewController: UIViewController, ARSessionDelegate {
         
         // RGB Radius control
         rgbRadiusSlider.minimumValue = 0
-        rgbRadiusSlider.maximumValue = 1.5
+        rgbRadiusSlider.maximumValue = 2
         rgbRadiusSlider.isContinuous = true
         rgbRadiusSlider.value = renderer.rgbRadius
         rgbRadiusSlider.addTarget(self, action: #selector(viewValueChanged), for: .valueChanged)
@@ -96,7 +92,6 @@ final class ViewController: UIViewController, ARSessionDelegate {
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.layer.masksToBounds = true
         textLabel.layer.cornerRadius = 8
-//        textLabel.textAlignment = .right
         textLabel.sizeToFit()
         textLabel.numberOfLines = 2
         
@@ -110,11 +105,10 @@ final class ViewController: UIViewController, ARSessionDelegate {
         view.addSubview(textLabel)
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
             textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            textLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-            textLabel.heightAnchor.constraint(equalToConstant: 50),
-//            textLabel.widthAnchor.constraint(equalToConstant: 200)
+            textLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            textLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -179,14 +173,22 @@ final class ViewController: UIViewController, ARSessionDelegate {
     private func updateIsRecording(_isRecording: Bool) {
         isRecording = _isRecording
         if (isRecording){
-            recordButton.setTitle("PAUSE", for: .normal)
+            recordButton.setTitle("STOP", for: .normal)
             recordButton.backgroundColor = .systemRed
             renderer.currentFolder = getTimeStr()
             createDirectory(folder: renderer.currentFolder + "/data")
         } else {
             recordButton.setTitle("START", for: .normal)
             recordButton.backgroundColor = .systemBlue
-            renderer.savePointCloud()
+            renderer.savePointCloud { result in
+                switch result {
+                case .success(let path):
+                    print("Point cloud saved successfully with filename: \(path)")
+                    self.onDone(path)
+                case .failure(let error):
+                    print("Failed to save point cloud: \(error.localizedDescription)")
+                }
+            }
         }
         renderer.isRecording = isRecording
     }
