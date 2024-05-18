@@ -30,6 +30,9 @@
 		2D6AD35A2BD20D54007191CB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 2D6AD3592BD20D54007191CB /* GoogleSignIn */; };
 		2D6AD35C2BD20D54007191CB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2D6AD35B2BD20D54007191CB /* GoogleSignInSwift */; };
 		2D6AD35E2BD20DC9007191CB /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6AD35D2BD20DC9007191CB /* MainView.swift */; };
+		2D9775802BF9449000C38FD3 /* VisualizeControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D97757F2BF9449000C38FD3 /* VisualizeControllerV2.swift */; };
+		2D9775822BF944E500C38FD3 /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9775812BF944E500C38FD3 /* FileReader.swift */; };
+		2D9775842BF9462100C38FD3 /* WrapperVC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9775832BF9462100C38FD3 /* WrapperVC2.swift */; };
 		2DCEDC652BEE2A2F006845F7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEDC592BEE2A2E006845F7 /* Renderer.swift */; };
 		2DCEDC662BEE2A2F006845F7 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEDC5A2BEE2A2E006845F7 /* Shaders.metal */; };
 		2DCEDC682BEE2A2F006845F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEDC5C2BEE2A2E006845F7 /* ViewController.swift */; };
@@ -78,6 +81,9 @@
 		2D6AD3532BD20D14007191CB /* SGInputSelectField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGInputSelectField.swift; sourceTree = "<group>"; };
 		2D6AD3542BD20D14007191CB /* SGInputTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SGInputTextField.swift; sourceTree = "<group>"; };
 		2D6AD35D2BD20DC9007191CB /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2D97757F2BF9449000C38FD3 /* VisualizeControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualizeControllerV2.swift; sourceTree = "<group>"; };
+		2D9775812BF944E500C38FD3 /* FileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileReader.swift; sourceTree = "<group>"; };
+		2D9775832BF9462100C38FD3 /* WrapperVC2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrapperVC2.swift; sourceTree = "<group>"; };
 		2DCEDC582BEE2A2D006845F7 /* SceneDepthPointCloud-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SceneDepthPointCloud-Bridging-Header.h"; sourceTree = "<group>"; };
 		2DCEDC592BEE2A2E006845F7 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		2DCEDC5A2BEE2A2E006845F7 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
@@ -268,9 +274,20 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		2D97757E2BF9447B00C38FD3 /* PCL */ = {
+			isa = PBXGroup;
+			children = (
+				2D9775812BF944E500C38FD3 /* FileReader.swift */,
+				2D97757F2BF9449000C38FD3 /* VisualizeControllerV2.swift */,
+				2D9775832BF9462100C38FD3 /* WrapperVC2.swift */,
+			);
+			path = PCL;
+			sourceTree = "<group>";
+		};
 		2DCEDC462BED8339006845F7 /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				2D97757E2BF9447B00C38FD3 /* PCL */,
 				610347E02B468A0000693CE3 /* SplatRenderer */,
 			);
 			path = Renderer;
@@ -456,15 +473,18 @@
 				61791DCF2B41544300302B57 /* Assets.xcassets in Sources */,
 				2D6AD3452BD20D09007191CB /* ExploreItemView.swift in Sources */,
 				2D6AD3212BD20CE7007191CB /* DateFormatter.swift in Sources */,
+				2D9775822BF944E500C38FD3 /* FileReader.swift in Sources */,
 				61791E132B416DD700302B57 /* Constants.swift in Sources */,
 				2DCEDC6F2BEE2A2F006845F7 /* MetalBuffer.swift in Sources */,
 				2D6AD3482BD20D09007191CB /* ExploreFileUploaderViewModel.swift in Sources */,
 				2DCEDC682BEE2A2F006845F7 /* ViewController.swift in Sources */,
 				61791E162B42297B00302B57 /* MetalKitSceneView.swift in Sources */,
+				2D9775802BF9449000C38FD3 /* VisualizeControllerV2.swift in Sources */,
 				2D6AD34A2BD20D09007191CB /* ExploreViewModel.swift in Sources */,
 				2D6AD3572BD20D14007191CB /* SGInputTextField.swift in Sources */,
 				2DCEDC6D2BEE2A2F006845F7 /* Helpers.swift in Sources */,
 				2D6AD3442BD20D09007191CB /* ExploreFileUploaderFormView.swift in Sources */,
+				2D9775842BF9462100C38FD3 /* WrapperVC2.swift in Sources */,
 				2D6AD34B2BD20D09007191CB /* User.swift in Sources */,
 				2DCEDC662BEE2A2F006845F7 /* Shaders.metal in Sources */,
 				2D6AD3432BD20D09007191CB /* ExploreFilePickerView.swift in Sources */,

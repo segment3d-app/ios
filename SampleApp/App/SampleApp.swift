@@ -6,7 +6,7 @@ import ARKit
 struct SampleApp: App {
     var body: some Scene {
         WindowGroup("Segment3d_App", id: "main") {
-            MainView()
+            WrapperVC2()
         }
     }
 }
