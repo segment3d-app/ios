@@ -56,7 +56,9 @@ struct ProfileView: View {
                         Spacer()
                         
                     } else {
-                        Text("Loading...")
+                        Color.white.opacity(0.2)
+                            .ignoresSafeArea()
+                        ProgressView()
                     }
                 }
                 .navigationTitle("Profile")

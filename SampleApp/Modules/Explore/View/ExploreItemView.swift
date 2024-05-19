@@ -13,38 +13,11 @@ struct ExploreItemView: View {
     @State private var showLikeAnimation = false
     @State private var showUnlikeAnimation = false
     
-    var openWindow: (ModelIdentifier) -> Void
+    var onTapImage: (Asset) -> Void
     
-    init(viewModel: ExploreItemViewModel, openWindow: @escaping (ModelIdentifier) -> Void) {
+    init(viewModel: ExploreItemViewModel, onTapImage: @escaping (Asset) -> Void) {
         self.viewModel = viewModel
-        self.openWindow = openWindow
-    }
-    
-    func downloadFile(from url: URL, to destination: URL, completion: @escaping (Error?) -> Void) {
-        let fileManager = FileManager.default
-        
-        if fileManager.fileExists(atPath: destination.path) {
-            do {
-                try fileManager.removeItem(at: destination)
-            } catch {
-                completion(error)
-                return
-            }
-        }
-        
-        let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
-            if let localURL = localURL {
-                do {
-                    try FileManager.default.moveItem(at: localURL, to: destination)
-                    completion(nil)
-                } catch {
-                    completion(error)
-                }
-            } else {
-                completion(error)
-            }
-        }
-        task.resume()
+        self.onTapImage = onTapImage
     }
     
     var body: some View {
@@ -70,12 +43,6 @@ struct ExploreItemView: View {
                         .font(.subheadline)
                 }
                 Spacer()
-                
-                Button(action: {
-                    // Action for button
-                }) {
-                    Image(systemName: "ellipsis")
-                }
             }
             .padding([.top, .horizontal])
             
@@ -97,22 +64,7 @@ struct ExploreItemView: View {
                 .gesture(
                     TapGesture(count:1)
                         .onEnded({
-                            let remoteURL = URL(string: "https://storage.googleapis.com/segment3d-app/test.ply")!
-
-                            guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                                fatalError("Unable to access documents directory")
-                            }
-
-                            let localFilePath = documentsDirectory.appendingPathComponent("test.ply")
-                            
-                            downloadFile(from: remoteURL, to: localFilePath) { error in
-                                if let error = error {
-                                    print("Error downloading file: \(error)")
-                                } else {
-                                    print("File downloaded successfully")
-                                    openWindow(ModelIdentifier.gaussianSplat(localFilePath))
-                                }
-                            }
+                            onTapImage(viewModel.asset)
                         })) //.gesture
                 .highPriorityGesture(TapGesture(count:2)
                     .onEnded({
