@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>ApiUrl</key>
-	<string>http://34.70.49.185:8080/api</string>
+	<string>http://103.174.115.248:8080/api</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -25,7 +25,7 @@
 		<true/>
 	</dict>
 	<key>StorageUrl</key>
-	<string>http://34.70.49.185:8081</string>
+	<string>http://103.174.115.248:8081</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationPreferredDefaultSceneSessionRole</key>
