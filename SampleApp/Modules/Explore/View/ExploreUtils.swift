@@ -36,7 +36,6 @@ func getImages(forDirectory directoryPath: String) -> [UIImage] {
 }
 
 func getPointCloud(forDirectory directoryPath: String) -> URL? {
-    print("masuk pcl")
     let fileManager = FileManager.default
     do {
         let directoryURL = getDocumentsDirectory().appendingPathComponent(directoryPath, isDirectory: true)

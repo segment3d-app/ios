@@ -13,6 +13,10 @@ struct AssetListResponse: Codable {
     let message: String
 }
 
+struct SagaImagesResponse: Codable {
+    let files: [String]
+}
+
 struct Asset: Codable, Identifiable {
     let id: String
     let title, slug, type, thumbnailUrl, photoDirUrl, splatUrl, pclUrl, pclColmapUrl, segmentedPclDirUrl, segmentedSplatDirUrl, status, createdAt, updatedAt: String
@@ -44,6 +48,7 @@ class ExploreViewModel: ObservableObject {
     @Published var images: [UIImage] = []
     @Published var mediaItems: [MediaItem] = []
     @Published var alertMessage: String?
+    @Published var sagaImage: [String] = []
     
     init(isMyAssetOnly: Bool) {
         self.isMyAssetOnly = isMyAssetOnly
@@ -91,6 +96,54 @@ class ExploreViewModel: ObservableObject {
                 if let decodedResponse = try? JSONDecoder().decode(AssetListResponse.self, from: data) {
                     self?.assets = decodedResponse.assets
                     self?.message = decodedResponse.message
+                } else {
+                    print(data, response)
+                    print("Failed to decode JSON")
+                }
+            }
+        }.resume()
+    }
+    
+    func fetchSagaImage(assetDir: String, withLoading: Bool = true) {
+        print("masuk saga nih bos")
+        if withLoading {
+            isLoading = true
+        }
+        
+        var urlString = "\(Config.storageUrl)\(assetDir)?isLink=true"
+        print(urlString)
+        
+        
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let token = getToken()
+        var request = URLRequest(url: url)
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                if let error = error {
+                    print("Error fetching assets: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let data = data else {
+                    print("No data returned from server")
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                    print("Error with the response, unexpected status code")
+                    print(response)
+                    return
+                }
+                
+                if let decodedResponse = try? JSONDecoder().decode(SagaImagesResponse.self, from: data) {
+                    self?.sagaImage = decodedResponse.files
                 } else {
                     print(data, response)
                     print("Failed to decode JSON")

@@ -41,6 +41,10 @@
 		2DCEDC6F2BEE2A2F006845F7 /* MetalBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEDC642BEE2A2E006845F7 /* MetalBuffer.swift */; };
 		2DCEDC722BEE383E006845F7 /* ScannerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEDC712BEE383E006845F7 /* ScannerWrapper.swift */; };
 		2DCEDC762BEE6FB7006845F7 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEDC752BEE6FB7006845F7 /* LICENSE.txt */; };
+		2DE7332F2BFD075200BD1087 /* PhotoBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7332E2BFD075200BD1087 /* PhotoBrowserViewController.swift */; };
+		2DE733312BFD0E0600BD1087 /* PhotoBrowserViewControllerRespresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE733302BFD0E0600BD1087 /* PhotoBrowserViewControllerRespresentable.swift */; };
+		2DE733332BFD0E4400BD1087 /* PhotoBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE733322BFD0E4400BD1087 /* PhotoBrowserView.swift */; };
+		2DE733352BFD199400BD1087 /* DotOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE733342BFD199400BD1087 /* DotOverlay.swift */; };
 		2DFCEF482BEFAA7B00930430 /* ExploreUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFCEF472BEFAA7B00930430 /* ExploreUtils.swift */; };
 		610347D92B46864500693CE3 /* Segment3d.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61791DF62B41551F00302B57 /* Segment3d.swift */; };
 		61791DCF2B41544300302B57 /* Assets.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 61791DC32B41514300302B57 /* Assets.xcassets */; };
@@ -94,6 +98,10 @@
 		2DCEDC712BEE383E006845F7 /* ScannerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerWrapper.swift; sourceTree = "<group>"; };
 		2DCEDC732BEE6FA6006845F7 /* SampleCode.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = SampleCode.xcconfig; sourceTree = "<group>"; };
 		2DCEDC752BEE6FB7006845F7 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		2DE7332E2BFD075200BD1087 /* PhotoBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBrowserViewController.swift; sourceTree = "<group>"; };
+		2DE733302BFD0E0600BD1087 /* PhotoBrowserViewControllerRespresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBrowserViewControllerRespresentable.swift; sourceTree = "<group>"; };
+		2DE733322BFD0E4400BD1087 /* PhotoBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBrowserView.swift; sourceTree = "<group>"; };
+		2DE733342BFD199400BD1087 /* DotOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotOverlay.swift; sourceTree = "<group>"; };
 		2DFCEF472BEFAA7B00930430 /* ExploreUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreUtils.swift; sourceTree = "<group>"; };
 		61791DC32B41514300302B57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		61791DDA2B4154FB00302B57 /* SplatRenderer+ModelRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SplatRenderer+ModelRenderer.swift"; sourceTree = "<group>"; };
@@ -287,6 +295,10 @@
 		2D9775852BFA540D00C38FD3 /* PhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				2DE7332E2BFD075200BD1087 /* PhotoBrowserViewController.swift */,
+				2DE733302BFD0E0600BD1087 /* PhotoBrowserViewControllerRespresentable.swift */,
+				2DE733322BFD0E4400BD1087 /* PhotoBrowserView.swift */,
+				2DE733342BFD199400BD1087 /* DotOverlay.swift */,
 			);
 			path = PhotoBrowser;
 			sourceTree = "<group>";
@@ -462,6 +474,7 @@
 				2D6AD3502BD20D09007191CB /* ProfileViewModel.swift in Sources */,
 				61791DE22B4154FB00302B57 /* ModelIdentifier.swift in Sources */,
 				2D6AD34C2BD20D09007191CB /* AuthAction.swift in Sources */,
+				2DE733312BFD0E0600BD1087 /* PhotoBrowserViewControllerRespresentable.swift in Sources */,
 				2D6AD3242BD20D01007191CB /* Config.swift in Sources */,
 				2DCEDC722BEE383E006845F7 /* ScannerWrapper.swift in Sources */,
 				61791DE42B4154FB00302B57 /* SampleBoxRenderer+ModelRenderer.swift in Sources */,
@@ -470,6 +483,7 @@
 				61791DEA2B4154FB00302B57 /* MatrixMathUtil.swift in Sources */,
 				2D63B0422BD3A96C0024A3A1 /* CustomMTKView.swift in Sources */,
 				2D6AD34E2BD20D09007191CB /* LoginViewModel.swift in Sources */,
+				2DE7332F2BFD075200BD1087 /* PhotoBrowserViewController.swift in Sources */,
 				610347D92B46864500693CE3 /* Segment3d.swift in Sources */,
 				61791E102B41688000302B57 /* MetalKitSceneRenderer.swift in Sources */,
 				2D6AD34F2BD20D09007191CB /* ProfileView.swift in Sources */,
@@ -481,6 +495,7 @@
 				2D6AD3212BD20CE7007191CB /* DateFormatter.swift in Sources */,
 				2D9775822BF944E500C38FD3 /* FileReader.swift in Sources */,
 				61791E132B416DD700302B57 /* Constants.swift in Sources */,
+				2DE733332BFD0E4400BD1087 /* PhotoBrowserView.swift in Sources */,
 				2DCEDC6F2BEE2A2F006845F7 /* MetalBuffer.swift in Sources */,
 				2D6AD3482BD20D09007191CB /* ExploreFileUploaderViewModel.swift in Sources */,
 				2DCEDC682BEE2A2F006845F7 /* ViewController.swift in Sources */,
@@ -494,6 +509,7 @@
 				2D6AD34B2BD20D09007191CB /* User.swift in Sources */,
 				2DCEDC662BEE2A2F006845F7 /* Shaders.metal in Sources */,
 				2D6AD3432BD20D09007191CB /* ExploreFilePickerView.swift in Sources */,
+				2DE733352BFD199400BD1087 /* DotOverlay.swift in Sources */,
 				2D6AD3462BD20D09007191CB /* ExploreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

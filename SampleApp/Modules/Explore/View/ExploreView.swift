@@ -155,6 +155,8 @@ struct ExploreView: View {
                         if destination == "PCLRenderer", let chosenCloud = currentAssetUrl {
                             PointCloudSceneView(chosenCloud: chosenCloud)
                                 .navigationTitle(currentAsset?.title ?? "")
+                        } else if destination == "Saga" {
+                            PhotoBrowserView(images: viewModel.sagaImage)
                         }
                     }
                     .sheet(item: $activeSheet) { item in
@@ -302,10 +304,14 @@ struct ExploreView: View {
                                     Text("View 3D Gaussian Splatting")
                                 })
                                 Button(action: {
+                                    navigationPath.append("")
                                 }, label: {
                                     Text("View PTv3 Segmentation")
                                 })
                                 Button(action: {
+                                    activeSheet = nil
+                                    viewModel.fetchSagaImage(assetDir: currentAsset?.photoDirUrl ?? "", withLoading: true)
+                                    navigationPath.append("Saga")
                                 }, label: {
                                     Text("Segment Using Saga")
                                 })

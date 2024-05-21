@@ -13,12 +13,12 @@
 			<string>app.segment3d.Segment3D</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.751456011953-0lvp69n5seq47gr77fmdvgvsqa8cp1s2</string>
+				<string>com.googleusercontent.apps.1043098670867-9rpr9sgvo01jkjcejaa3g871v32hsi6f</string>
 			</array>
 		</dict>
 	</array>
 	<key>GoogleClientID</key>
-	<string>751456011953-0lvp69n5seq47gr77fmdvgvsqa8cp1s2.apps.googleusercontent.com</string>
+	<string>1043098670867-9rpr9sgvo01jkjcejaa3g871v32hsi6f.apps.googleusercontent.com</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
