@@ -23,7 +23,7 @@ final class Renderer {
     public weak var delegate: TaskDelegate?
     
     // Maximum number of points we store in the point cloud
-    private let maxPoints = 500_000
+    private let maxPoints = 1_500_000
     // Number of sample points on the grid
     private let numGridPoints = 500
     // Particle's size in pixels
@@ -333,9 +333,11 @@ final class Renderer {
                     let green = colors.y * 255.0
                     let blue = colors.z * 255.0
                     
-                    let pvValue = "\(point.position.x) \(point.position.y) \(point.position.z) \(Int(red)) \(Int(green)) \(Int(blue))"
-                    fileToWrite += pvValue
-                    fileToWrite += "\r\n"
+                    if checkColor(value: red), checkColor(value: green), checkColor(value: blue) {
+                        let pvValue = "\(point.position.x) \(point.position.y) \(point.position.z) \(Int(red)) \(Int(green)) \(Int(blue))"
+                        fileToWrite += pvValue
+                        fileToWrite += "\r\n"
+                    }
                 }
                 
                 // Save the file
@@ -349,7 +351,10 @@ final class Renderer {
             }
         }
     }
-
+    
+    private func checkColor(value: Float) -> Bool {
+        return value >= 0.0 && value <= 255.0
+    }
     
     private func shouldAccumulate(frame: ARFrame) -> Bool {
         if (!isRecording) {

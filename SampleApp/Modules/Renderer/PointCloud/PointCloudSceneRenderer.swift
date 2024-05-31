@@ -1,11 +1,9 @@
 import Foundation
 import UIKit
 import SceneKit
-import ARKit
 
-class PointCloudSceneRenderer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
-
-    var sceneView: ARSCNView!
+class PointCloudSceneRenderer: UIViewController {
+    var sceneView: SCNView!
     var chosenCloud: URL!
     var spinnerView: UIActivityIndicatorView!
 
@@ -22,12 +20,10 @@ class PointCloudSceneRenderer: UIViewController, ARSCNViewDelegate, ARSessionDel
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
-        // Initialize and set up the ARSCNView
-        sceneView = ARSCNView(frame: self.view.frame)
-        sceneView.delegate = self
-        sceneView.session.delegate = self
-        sceneView.showsStatistics = true
+        sceneView = SCNView(frame: self.view.frame)
         sceneView.allowsCameraControl = true
+        sceneView.showsStatistics = true
+        sceneView.backgroundColor = .black
         sceneView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(sceneView)
         
@@ -47,78 +43,87 @@ class PointCloudSceneRenderer: UIViewController, ARSCNViewDelegate, ARSessionDel
         
         spinnerView.startAnimating()
         
-        DispatchQueue.global(qos: .background).async { [weak self] in
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self, let chosenCloud = self.chosenCloud else { return }
-            
-            let xDir: Float = 0
-            let yDir: Float = 0
-            let zDir: Float = -7
             
             let scene = SCNScene()
             let pointCloud = FileReader.readFile(url: chosenCloud)
             
-            for point in pointCloud {
-                let x = point[0]
-                let y = point[1]
-                let z = point[2]
+            let vertices = pointCloud.map { point -> SCNVector3 in
+                return SCNVector3(point[0], point[1], point[2])
+            }
+            
+            let colors = pointCloud.map { point -> UIColor in
                 let r = point[3] / 255.0
                 let g = point[4] / 255.0
                 let b = point[5] / 255.0
-                
-                let node = getCircleNode(location: SCNVector3(x,y,z), r: Float(r), g: Float(g), b: Float(b))
-                
-                node.position.x += xDir
-                node.position.y += yDir
-                node.position.z += zDir
-                
-                node.name = String(x+y*z)
-                scene.rootNode.addChildNode(node)
+                return UIColor(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: 1.0)
             }
             
-            DispatchQueue.main.async { [weak self] in
-                self?.spinnerView.stopAnimating()
-                
-                self?.sceneView.scene = scene
-                self?.sceneView.scene.background.contents = UIColor.black
+            let geometry = self.createPointCloudGeometry(vertices: vertices, colors: colors)
+            
+            let node = SCNNode(geometry: geometry)
+            scene.rootNode.addChildNode(node)
+            
+            DispatchQueue.main.async {
+                self.spinnerView.stopAnimating()
+                self.sceneView.scene = scene
             }
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    private func createPointCloudGeometry(vertices: [SCNVector3], colors: [UIColor]) -> SCNGeometry {
+        let vertexData = vertices.flatMap { [$0.x, $0.y, $0.z] }
+        let colorData = colors.flatMap { color -> [Float] in
+            var red: CGFloat = 0
+            var green: CGFloat = 0
+            var blue: CGFloat = 0
+            var alpha: CGFloat = 0
+            color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+            return [Float(red), Float(green), Float(blue), Float(alpha)]
+        }
+        
+        let vertexSource = SCNGeometrySource(data: Data(bytes: vertexData, count: vertexData.count * MemoryLayout<Float>.size),
+                                             semantic: .vertex,
+                                             vectorCount: vertices.count,
+                                             usesFloatComponents: true,
+                                             componentsPerVector: 3,
+                                             bytesPerComponent: MemoryLayout<Float>.size,
+                                             dataOffset: 0,
+                                             dataStride: MemoryLayout<Float>.size * 3)
+        
+        let colorSource = SCNGeometrySource(data: Data(bytes: colorData, count: colorData.count * MemoryLayout<Float>.size),
+                                            semantic: .color,
+                                            vectorCount: colors.count,
+                                            usesFloatComponents: true,
+                                            componentsPerVector: 4,
+                                            bytesPerComponent: MemoryLayout<Float>.size,
+                                            dataOffset: 0,
+                                            dataStride: MemoryLayout<Float>.size * 4)
+        
+        let indices = Array(0..<vertices.count)
+        let indexData = Data(bytes: indices, count: indices.count * MemoryLayout<Int32>.size)
+        let element = SCNGeometryElement(data: indexData,
+                                         primitiveType: .point,
+                                         primitiveCount: vertices.count,
+                                         bytesPerIndex: MemoryLayout<Int32>.size)
+        
+        let geometry = SCNGeometry(sources: [vertexSource, colorSource], elements: [element])
+        geometry.firstMaterial?.isDoubleSided = true
+        geometry.firstMaterial?.lightingModel = .constant
+        print(geometry)
+        
+        return geometry
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        sceneView.session.pause()
+        sceneView.scene = nil
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        sceneView.session.delegate = nil
+        super.viewDidDisappear(animated)
         sceneView.removeFromSuperview()
         sceneView = nil
     }
-
-    // MARK: - ARSCNViewDelegate
-    
-    func session(_ session: ARSession, didUpdate frame: ARFrame) { }
-    
-    func sessionWasInterrupted(_ session: ARSession) { }
-    
-    func sessionInterruptionEnded(_ session: ARSession) { }
-}
-
-// Helper functions
-func getCircleNode(location: SCNVector3, r: Float, g: Float, b: Float) -> SCNNode {
-    // Create the color using the RGB values provided
-    let color = UIColor(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: 1.0)
-    
-    let sphere = SCNSphere(radius: 0.005)
-    sphere.firstMaterial?.lightingModel = SCNMaterial.LightingModel.constant
-    sphere.firstMaterial?.diffuse.contents = color
-    
-    let node = SCNNode(geometry: sphere)
-    node.position = location
-    
-    return node
 }

@@ -1,6 +1,5 @@
 import SwiftUI
 import GoogleSignIn
-import ARKit
 
 @main
 struct Segment3d: App {
