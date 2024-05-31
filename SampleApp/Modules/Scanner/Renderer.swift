@@ -329,15 +329,13 @@ final class Renderer {
                     let point = particlesBuffer[i]
                     let colors = point.color
                     
-                    let red = colors.x * 255.0
-                    let green = colors.y * 255.0
-                    let blue = colors.z * 255.0
+                    let red = normalizeColor(value: colors.x * 255.0)
+                    let green = normalizeColor(value: colors.y * 255.0)
+                    let blue = normalizeColor(value: colors.z * 255.0)
                     
-                    if checkColor(value: red), checkColor(value: green), checkColor(value: blue) {
-                        let pvValue = "\(point.position.x) \(point.position.y) \(point.position.z) \(Int(red)) \(Int(green)) \(Int(blue))"
-                        fileToWrite += pvValue
-                        fileToWrite += "\r\n"
-                    }
+                    let pvValue = "\(point.position.x) \(point.position.y) \(point.position.z) \(Int(red)) \(Int(green)) \(Int(blue))"
+                    fileToWrite += pvValue
+                    fileToWrite += "\r\n"
                 }
                 
                 // Save the file
@@ -352,8 +350,12 @@ final class Renderer {
         }
     }
     
-    private func checkColor(value: Float) -> Bool {
-        return value >= 0.0 && value <= 255.0
+    private func normalizeColor(value: Float) -> Float {
+        if value >= 0.0 && value <= 255.0 {
+            return value
+        }
+        
+        return 0
     }
     
     private func shouldAccumulate(frame: ARFrame) -> Bool {
