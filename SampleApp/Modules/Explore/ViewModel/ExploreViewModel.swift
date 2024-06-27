@@ -105,14 +105,11 @@ class ExploreViewModel: ObservableObject {
     }
     
     func fetchSagaImage(assetDir: String, withLoading: Bool = true) {
-        print("masuk saga nih bos")
         if withLoading {
             isLoading = true
         }
         
-        var urlString = "\(Config.storageUrl)\(assetDir)?isLink=true"
-        print(urlString)
-        
+        var urlString = "\(Config.storageUrl)\(assetDir)"
         
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
@@ -138,16 +135,27 @@ class ExploreViewModel: ObservableObject {
                 
                 guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
                     print("Error with the response, unexpected status code")
-                    print(response)
                     return
                 }
                 
                 if let decodedResponse = try? JSONDecoder().decode(SagaImagesResponse.self, from: data) {
                     self?.sagaImage = decodedResponse.files
+                    let imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "tiff"]
+
+                    let imageFiles = decodedResponse.files.filter { file in
+                        if let fileExtension = file.split(separator: ".").last?.lowercased() {
+                            return imageExtensions.contains(fileExtension)
+                        }
+                        return false
+                    }
+                    
+                    DispatchQueue.main.async { [weak self] in
+                        self?.sagaImage = imageFiles
+                    }
                 } else {
-                    print(data, response)
                     print("Failed to decode JSON")
                 }
+
             }
         }.resume()
     }

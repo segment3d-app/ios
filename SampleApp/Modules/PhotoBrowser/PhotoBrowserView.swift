@@ -9,9 +9,11 @@ import SwiftUI
 
 struct PhotoBrowserView: View {
     var images: [String]
+    var assetId: String
+    var onSegment: (_ url: String) -> Void
     
     var body: some View {
-        PhotoBrowserViewControllerRepresentable(images: images)
+        PhotoBrowserViewControllerRepresentable(images: images, assetId: assetId, onSegment: onSegment)
             .edgesIgnoringSafeArea(.all)
     }
 }

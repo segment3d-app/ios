@@ -156,7 +156,33 @@ struct ExploreView: View {
                             PointCloudSceneView(chosenCloud: chosenCloud)
                                 .navigationTitle(currentAsset?.title ?? "")
                         } else if destination == "Saga" {
-                            PhotoBrowserView(images: viewModel.sagaImage)
+                            PhotoBrowserView(images: viewModel.sagaImage, assetId: currentAsset?.id ?? "", onSegment: { url in
+                                isLoading = true
+                                
+                                print("is Loading", navigationPath)
+                                if !navigationPath.isEmpty {
+                                    navigationPath.removeLast()
+                                }
+                                
+                                let pathName = url
+                                print(pathName)
+                                
+                                guard !pathName.isEmpty else {
+                                    viewModel.alertMessage = "Saga Segmentation is not generated yet"
+                                    isLoading = false
+                                    return
+                                }
+                                
+                                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                                    isLoading = false
+                                    fatalError("Unable to access documents directory")
+                                }
+                                
+                                let localFilePath = documentsDirectory.appendingPathComponent(url)
+                                
+                                isLoading = false
+                                openWindow(value: ModelIdentifier.gaussianSplat(localFilePath))
+                            })
                         }
                     }
                     .sheet(item: $activeSheet) { item in
@@ -229,7 +255,7 @@ struct ExploreView: View {
                                     activeSheet = nil
                                     isLoading = true
                                     guard let pathName = currentAsset?.pclUrl ?? currentAsset?.pclColmapUrl, !pathName.isEmpty else {
-                                        viewModel.alertMessage = "3D Point Cloud is not generated yet"
+                                        viewModel.alertMessage = "Point Cloud is not generated yet"
                                         isLoading = false
                                         return
                                     }
@@ -262,7 +288,7 @@ struct ExploreView: View {
                                         }
                                     }
                                 }, label: {
-                                    Text("View 3D Point Cloud")
+                                    Text("View Point Cloud")
                                 })
                                 Button(action: {
                                     activeSheet = nil
@@ -304,13 +330,54 @@ struct ExploreView: View {
                                     Text("View 3D Gaussian Splatting")
                                 })
                                 Button(action: {
-                                    navigationPath.append("")
+                                    activeSheet = nil
+                                    isLoading = true
+                                    guard let pathName = currentAsset?.segmentedPclDirUrl, !pathName.isEmpty else {
+                                        viewModel.alertMessage = "PTv3 Segmentation is not generated yet"
+                                        isLoading = false
+                                        return
+                                    }
+                                    
+                                    let storageUrl = Config.storageUrl
+                                    
+                                    guard !storageUrl.isEmpty, let remoteURL = URL(string: "\(storageUrl)\(pathName)") else {
+                                        viewModel.alertMessage = "Invalid URL"
+                                        isLoading = false
+                                        return
+                                    }
+                                    
+                                    guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                                        isLoading = false
+                                        fatalError("Unable to access documents directory")
+                                    }
+                                    
+                                    let localFilePath = documentsDirectory.appendingPathComponent("test.ply")
+                                    
+                                    downloadFile(from: remoteURL, to: localFilePath) { error in
+                                        if let error = error {
+                                            print("Error downloading file: \(error)")
+                                            currentAssetUrl = nil
+                                            isLoading = false
+                                        } else {
+                                            print("File downloaded successfully")
+                                            currentAssetUrl = localFilePath
+                                            isLoading = false
+                                            navigationPath.append("PCLRenderer")
+                                        }
+                                    }
                                 }, label: {
                                     Text("View PTv3 Segmentation")
                                 })
                                 Button(action: {
                                     activeSheet = nil
-                                    viewModel.fetchSagaImage(assetDir: currentAsset?.photoDirUrl ?? "", withLoading: true)
+                                    isLoading = true
+                                    guard let pathName = currentAsset?.segmentedSplatDirUrl, !pathName.isEmpty else {
+                                        viewModel.alertMessage = "Saga Segmentation is not generated yet"
+                                        isLoading = false
+                                        return
+                                    }
+                                    viewModel.fetchSagaImage(assetDir: currentAsset?.segmentedSplatDirUrl ?? "", withLoading: true)
+                                    isLoading = false
                                     navigationPath.append("Saga")
                                 }, label: {
                                     Text("Segment Using Saga")

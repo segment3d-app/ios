@@ -10,9 +10,11 @@ import UIKit
 
 struct PhotoBrowserViewControllerRepresentable: UIViewControllerRepresentable {
     var images: [String]
+    var assetId: String
+    var onSegment: (_ url: String) -> Void
     
     func makeUIViewController(context: Context) -> PhotoBrowserViewController {
-        return PhotoBrowserViewController(images: images)
+        return PhotoBrowserViewController(images: images, assetId: assetId, onSegment: onSegment)
     }
     
     func updateUIViewController(_ uiViewController: PhotoBrowserViewController, context: Context) {

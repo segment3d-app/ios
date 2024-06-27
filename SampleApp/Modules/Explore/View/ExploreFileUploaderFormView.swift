@@ -133,7 +133,6 @@ struct ExploreFileUploaderFormView: View {
         NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: nil) { (newURL) in
             do {
                 let data = try Data(contentsOf: newURL)
-                print("File size: \(data.count) bytes")
             } catch {
                 print("Error reading video file: \(error)")
             }

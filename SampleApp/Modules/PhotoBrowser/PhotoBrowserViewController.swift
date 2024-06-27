@@ -6,19 +6,35 @@
 //
 
 import UIKit
+import Foundation
+import UniformTypeIdentifiers
 
 enum Status {
     case none, didClickSegment, did
 }
 
+protocol PhotoBrowserDelegate: AnyObject {
+    func didSelectCoordinates(x: CGFloat, y: CGFloat, index: Int)
+}
+
+struct SegmentSagaResponse: Codable {
+    let url: String
+    let message: String
+}
+
 final class PhotoBrowserViewController: UIViewController {
     var images: [String]!
+    var assetId: String!
+    var onSegment: (_ url: String) -> Void
     var x: CGFloat = 0
     var y: CGFloat = 0
     var index: Int = 0
+    var url: String = ""
     
-    init(images: [String]) {
+    init(images: [String], assetId: String, onSegment: @escaping (_ url: String) -> Void) {
         self.images = images
+        self.assetId = assetId
+        self.onSegment = onSegment
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -56,6 +72,164 @@ final class PhotoBrowserViewController: UIViewController {
         return view
     }()
     
+    func currentDateTimeString() -> String {
+        let currentDateTime = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+        return formatter.string(from: currentDateTime)
+    }
+    
+    var segmentButton: UIButton = {
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "Segment Using SAGA"
+        configuration.baseForegroundColor = .white
+        configuration.baseBackgroundColor = .systemBlue
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+        
+        let button = UIButton(configuration: configuration)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    
+    @objc func segmentButtonClicked() {
+        if url.isEmpty {
+            var payload: [String: Any] = [
+                "url": images[index],
+                "x": Int(x),
+                "y": Int(y),
+                "uniqueIdentifier": currentDateTimeString()
+            ]
+            
+            guard let url = URL(string: "\(Config.apiUrl)/assets/saga/segment/\(assetId!)") else {
+                print("Invalid URL")
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = try? JSONSerialization.data(withJSONObject: payload, options: [])
+            request.addValue("Bearer \(getToken())", forHTTPHeaderField: "Authorization")
+            
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                DispatchQueue.main.async {
+                    
+                    if let error = error {
+                        print("Error upload asset: \(error.localizedDescription)")
+                        self?.showAlert(message: "Error Segment Using Saga: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    guard let data = data else {
+                        print("No data returned from server")
+                        self?.showAlert(message: "No data returned from server")
+                        return
+                    }
+                    
+                    guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                        self?.showAlert(message: "Error with the response, unexpected status code")
+                        return
+                    }
+                    
+                    if let decodedResponse = try? JSONDecoder().decode(SegmentSagaResponse.self, from: data) {
+                        self?.url = decodedResponse.url
+                        self?.segmentButton.setTitle("View Segmentation", for: .normal)
+                        self?.segmentButton.configuration?.baseBackgroundColor = .systemGreen
+                    } else {
+                        self?.showAlert(message: "Failed to decode JSON")
+                    }
+                }
+            }.resume()
+        } else {
+            guard let url = URL(string: "\(Config.storageUrl)\(url)") else {
+                print("Invalid URL")
+                return
+            }
+            
+            guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                fatalError("Unable to access documents directory")
+            }
+            
+            let localFilePath = documentsDirectory.appendingPathComponent("test.ply")
+            
+            downloadFile(from: url, to: localFilePath) { [weak self] error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Error downloading file: \(error.localizedDescription)")
+                    self.showAlert(message: "File is not generated yet")
+                } else {
+                    print("File downloaded successfully")
+                    self.onSegment("test.ply")
+                }
+            }
+        }
+    }
+    
+    func downloadFile(from url: URL, to destination: URL, completion: @escaping (Error?) -> Void) {
+        let fileManager = FileManager.default
+        
+        if fileManager.fileExists(atPath: destination.path) {
+            do {
+                try fileManager.removeItem(at: destination)
+            } catch {
+                DispatchQueue.main.async {
+                    completion(error)
+                }
+                return
+            }
+        }
+        
+        let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(error)
+                }
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                let statusError = NSError(domain: "DownloadErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "File does not exist at the URL"])
+                DispatchQueue.main.async {
+                    completion(statusError)
+                }
+                return
+            }
+            
+            if let localURL = localURL {
+                do {
+                    try FileManager.default.moveItem(at: localURL, to: destination)
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(error)
+                    }
+                }
+            } else {
+                let unknownError = NSError(domain: "DownloadErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown error occurred"])
+                DispatchQueue.main.async {
+                    completion(unknownError)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func getToken() -> String {
+        return UserDefaults.standard.string(forKey: "jwt") ?? ""
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -64,6 +238,9 @@ final class PhotoBrowserViewController: UIViewController {
         view.addSubview(collectionView)
         view.addSubview(label)
         view.addSubview(page)
+        view.addSubview(segmentButton)
+        
+        segmentButton.addTarget(self, action: #selector(segmentButtonClicked), for: .touchUpInside)
         
         page.text = "Images \(index + 1)/\(images.count)"
         
@@ -76,8 +253,12 @@ final class PhotoBrowserViewController: UIViewController {
             label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            
             page.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            page.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            page.bottomAnchor.constraint(equalTo: segmentButton.topAnchor, constant: -20),
+            
+            segmentButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            segmentButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }
     
@@ -145,7 +326,7 @@ final class PhotoBrowserCellViewController: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(imageView)
         contentView.addSubview(overlayView)
-        contentView.addSubview(label) // Add the label here
+        contentView.addSubview(label)
         
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -158,7 +339,7 @@ final class PhotoBrowserCellViewController: UICollectionViewCell {
             overlayView.topAnchor.constraint(equalTo: contentView.topAnchor),
             overlayView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20), // Define the constant value
+            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
         ])
@@ -232,9 +413,6 @@ final class PhotoBrowserCellViewController: UICollectionViewCell {
             let normalizedY = relativeY * 1024 / imageSize.height
             
             if relativeX >= 0 && relativeX <= imageSize.width && relativeY >= 0 && relativeY <= imageSize.height {
-                print("Normalized coordinates: (\(normalizedX), \(normalizedY))")
-                print("Tapped photo index: \(index)")
-                
                 let imageViewX = relativeX * scale + xOffset
                 let imageViewY = relativeY * scale + yOffset
                 overlayView.setDot(at: CGPoint(x: imageViewX, y: imageViewY))
@@ -245,7 +423,6 @@ final class PhotoBrowserCellViewController: UICollectionViewCell {
                 let formattedY = String(format: "%.1f", normalizedY)
                 delegate?.label.text = "Coordinate: (\(formattedX), \(formattedY))"
             } else {
-                print("Tap is outside the image bounds")
                 overlayView.setDot(at: .zero)
             }
         }
